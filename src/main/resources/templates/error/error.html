@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header('Error - Employee Management System')}"></head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <!-- Top Navbar -->
+        <header th:replace="~{fragments/layout :: topbar}"></header>
+
+        <!-- Page Body -->
+        <main class="page-content d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+            <div class="text-center" style="max-width: 540px;">
+                <div class="avatar-circle mx-auto mb-4 bg-danger-subtle text-danger" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                    <i class="bi bi-shield-exclamation"></i>
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-danger fs-6 px-3 py-1" th:text="'Error ' + (${status} ?: '500')">Error 500</span>
+                </div>
+                <h2 class="fw-bold text-dark mb-2" th:text="${error} ?: 'Something Went Wrong'">System Exception</h2>
+                <p class="text-secondary mb-4" th:text="${message} ?: 'An unexpected error occurred while processing your request.'">
+                    The requested operation could not be completed.
+                </p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a th:href="@{/dashboard}" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-house-door"></i>
+                        <span>Return to Dashboard</span>
+                    </a>
+                    <a th:href="@{/employees}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-people"></i>
+                        <span>Employee Directory</span>
+                    </a>
+                </div>
+                <div class="mt-4 text-muted small" th:if="${timestamp}">
+                    <span>Incident timestamp: </span><span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

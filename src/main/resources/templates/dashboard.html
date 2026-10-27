@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header('Dashboard - Employee Management System')}"></head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <!-- Top Navbar -->
+        <header th:replace="~{fragments/layout :: topbar}"></header>
+
+        <!-- Page Body -->
+        <main class="page-content">
+            <!-- Global Flash Alerts -->
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Executive Dashboard</h1>
+                    <p class="page-subtitle">Real-time organizational headcount, department statistics, and payroll overview</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/employees}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-table"></i>
+                        <span>View Employee Directory</span>
+                    </a>
+                    <a th:href="@{/employees/new}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-person-plus-fill"></i>
+                        <span>Register Employee</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Summary KPI Cards -->
+            <div class="row g-3 mb-4">
+                <!-- Card 1: Total Employees -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="metric-card">
+                        <div class="metric-card-inner">
+                            <div>
+                                <p class="metric-label">Total Headcount</p>
+                                <h3 class="metric-value" th:text="${totalEmployees}">0</h3>
+                                <small class="text-success fw-medium">
+                                    <i class="bi bi-arrow-up-right"></i> Active workforce
+                                </small>
+                            </div>
+                            <div class="metric-icon-box metric-icon-primary">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Departments -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="metric-card">
+                        <div class="metric-card-inner">
+                            <div>
+                                <p class="metric-label">Active Departments</p>
+                                <h3 class="metric-value" th:text="${totalDepartments}">0</h3>
+                                <small class="text-info fw-medium">
+                                    <i class="bi bi-building"></i> Operating units
+                                </small>
+                            </div>
+                            <div class="metric-icon-box metric-icon-info">
+                                <i class="bi bi-diagram-3-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Total Payroll -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="metric-card">
+                        <div class="metric-card-inner">
+                            <div>
+                                <p class="metric-label">Annual Payroll</p>
+                                <h3 class="metric-value" th:text="'$' + ${#numbers.formatDecimal(totalPayroll, 1, 'COMMA', 2, 'POINT')}">$0.00</h3>
+                                <small class="text-secondary fw-medium">
+                                    <i class="bi bi-wallet2"></i> Total compensation
+                                </small>
+                            </div>
+                            <div class="metric-icon-box metric-icon-success">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Average Salary -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="metric-card">
+                        <div class="metric-card-inner">
+                            <div>
+                                <p class="metric-label">Average Salary</p>
+                                <h3 class="metric-value" th:text="'$' + ${#numbers.formatDecimal(averageSalary, 1, 'COMMA', 2, 'POINT')}">$0.00</h3>
+                                <small class="text-warning fw-medium">
+                                    <i class="bi bi-graph-up-arrow"></i> Per employee
+                                </small>
+                            </div>
+                            <div class="metric-icon-box metric-icon-warning">
+                                <i class="bi bi-bar-chart-line-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-column Analytics Layout -->
+            <div class="row g-4 mb-4">
+                <!-- Left: Department Headcount Breakdown -->
+                <div class="col-12 col-lg-5">
+                    <div class="app-card h-100">
+                        <div class="app-card-header">
+                            <div>
+                                <h5 class="mb-0 fw-bold">Department Statistics</h5>
+                                <small class="text-muted">Staff distribution across departments</small>
+                            </div>
+                            <span class="badge bg-indigo-subtle text-primary fw-bold" th:text="${totalDepartments} + ' units'">0 units</span>
+                        </div>
+                        <div class="app-card-body">
+                            <div th:if="${departmentStats == null or departmentStats.isEmpty()}" class="empty-state py-4">
+                                <i class="bi bi-folder2-open fs-2 text-muted mb-2 d-block"></i>
+                                <p class="text-muted mb-0">No department data available yet.</p>
+                            </div>
+
+                            <div th:unless="${departmentStats == null or departmentStats.isEmpty()}">
+                                <div th:each="entry : ${departmentStats}" class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <a th:href="@{/employees(department=${entry.key})}" class="text-decoration-none fw-semibold text-dark">
+                                                <span th:text="${entry.key}">Department</span>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-light text-dark border px-2 py-1" th:text="${entry.value} + ' staff'">0 staff</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 7px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             th:style="'width: ' + (${totalEmployees > 0} ? (${entry.value} * 100 / ${totalEmployees}) : 0) + '%;'"
+                                             aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Recent Hires Feed -->
+                <div class="col-12 col-lg-7">
+                    <div class="app-card h-100">
+                        <div class="app-card-header">
+                            <div>
+                                <h5 class="mb-0 fw-bold">Recent Hires</h5>
+                                <small class="text-muted">Latest talent brought into the organization</small>
+                            </div>
+                            <a th:href="@{/employees}" class="btn btn-sm btn-link text-decoration-none">
+                                View all <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="app-card-body p-0">
+                            <div th:if="${recentHires == null or recentHires.isEmpty()}" class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-people"></i>
+                                </div>
+                                <h6 class="fw-bold">No employees registered</h6>
+                                <p class="text-muted small">Add your first employee to populate this feed.</p>
+                                <a th:href="@{/employees/new}" class="btn btn-sm btn-primary">Add Employee</a>
+                            </div>
+
+                            <div th:unless="${recentHires == null or recentHires.isEmpty()}" class="table-responsive">
+                                <table class="table custom-table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Employee</th>
+                                            <th>Department</th>
+                                            <th>Role</th>
+                                            <th>Joined Date</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="emp : ${recentHires}">
+                                            <td>
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="avatar-circle" th:text="${#strings.substring(emp.fullName, 0, 1)}">A</div>
+                                                    <div>
+                                                        <a th:href="@{/employees/{id}(id=${emp.id})}" class="fw-bold text-dark text-decoration-none" th:text="${emp.fullName}">Full Name</a>
+                                                        <div class="text-muted small" th:text="${emp.email}">email@company.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge-dept badge-dept-default" th:text="${emp.department}">Engineering</span>
+                                            </td>
+                                            <td th:text="${emp.jobTitle}">Developer</td>
+                                            <td>
+                                                <i class="bi bi-calendar3 text-muted me-1 small"></i>
+                                                <span th:text="${#temporals.format(emp.joiningDate, 'MMM dd, yyyy')}">Jan 01, 2024</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <a th:href="@{/employees/{id}(id=${emp.id})}" class="btn btn-sm btn-outline-secondary btn-icon" title="View Profile">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info Banner -->
+            <div class="card border-0 bg-primary text-white shadow-sm p-4 rounded-4" style="background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%) !important;">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="fw-bold mb-1"><i class="bi bi-lightbulb-fill text-warning me-2"></i>DevOps & Database Ready</h4>
+                        <p class="mb-0 text-white-50 small">
+                            Persisted to MySQL database <code>employee_management</code> via Spring Data JPA and Hibernate. Includes full input validation and duplicate email safeguards.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a th:href="@{/employees}" class="btn btn-light text-primary fw-semibold px-4">
+                            Explore Employee Directory
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

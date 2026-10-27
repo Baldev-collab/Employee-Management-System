@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header(${employee.fullName} + ' - Employee Profile')}"></head>
+<body>
+
+<div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <!-- Top Navbar -->
+        <header th:replace="~{fragments/layout :: topbar}"></header>
+
+        <!-- Page Body -->
+        <main class="page-content">
+            <!-- Global Flash Alerts -->
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <!-- Breadcrumbs & Navigation -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a th:href="@{/dashboard}" class="text-decoration-none">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/employees}" class="text-decoration-none">Employees</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" th:text="${employee.fullName}">Employee Profile</li>
+                    </ol>
+                </nav>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/employees}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        <span>Directory</span>
+                    </a>
+                    <a th:href="@{/employees/edit/{id}(id=${employee.id})}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Edit Profile</span>
+                    </a>
+                    <button type="button" class="btn btn-outline-danger d-flex align-items-center gap-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteConfirmModal"
+                            th:data-employee-id="${employee.id}"
+                            th:data-employee-name="${employee.fullName}">
+                        <i class="bi bi-trash"></i>
+                        <span>Delete</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Employee Hero Header Card -->
+            <div class="app-card mb-4 overflow-hidden">
+                <div class="p-4 bg-primary text-white" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;">
+                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                        <div class="avatar-circle lg bg-white text-primary border border-3 border-white shadow">
+                            <span th:text="${#strings.substring(employee.fullName, 0, 1)}">A</span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <h2 class="fw-bold mb-0 text-white" th:text="${employee.fullName}">Full Name</h2>
+                                <span class="badge bg-white text-primary fw-bold" th:text="'ID: #' + ${employee.id}">#1</span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Active Full-Time</span>
+                            </div>
+                            <p class="mb-0 mt-1 text-white-50 fs-5">
+                                <span th:text="${employee.jobTitle}">Job Title</span> • <span th:text="${employee.department}">Department</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="row g-4">
+                <!-- Column 1: Contact Information -->
+                <div class="col-12 col-md-6">
+                    <div class="app-card h-100">
+                        <div class="app-card-header">
+                            <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                                <i class="bi bi-person-vcard text-primary"></i>
+                                <span>Contact Details</span>
+                            </h5>
+                        </div>
+                        <div class="app-card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-envelope me-2"></i>Email Address</span>
+                                    <a th:href="'mailto:' + ${employee.email}" class="fw-semibold text-decoration-none text-dark" th:text="${employee.email}">email@acme.com</a>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-telephone me-2"></i>Phone Number</span>
+                                    <span class="fw-semibold text-dark" th:text="${employee.phone}">+1-555-0101</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-geo-alt me-2"></i>Work Location</span>
+                                    <span class="fw-semibold text-dark">Corporate Headquarters / Hybrid</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Department & Role -->
+                <div class="col-12 col-md-6">
+                    <div class="app-card h-100">
+                        <div class="app-card-header">
+                            <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                                <i class="bi bi-building-gear text-primary"></i>
+                                <span>Organization & Role</span>
+                            </h5>
+                        </div>
+                        <div class="app-card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-diagram-3 me-2"></i>Department</span>
+                                    <span class="badge-dept badge-dept-default fs-6" th:text="${employee.department}">Engineering</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-briefcase me-2"></i>Designation</span>
+                                    <span class="fw-semibold text-dark" th:text="${employee.jobTitle}">Role</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-calendar-check me-2"></i>Joining Date</span>
+                                    <span class="fw-semibold text-dark" th:text="${#temporals.format(employee.joiningDate, 'MMMM dd, yyyy')}">Date</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Compensation & Payroll -->
+                <div class="col-12 col-md-6">
+                    <div class="app-card h-100">
+                        <div class="app-card-header">
+                            <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                                <i class="bi bi-cash-stack text-success"></i>
+                                <span>Compensation Details</span>
+                            </h5>
+                        </div>
+                        <div class="app-card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-currency-dollar me-2"></i>Annual Salary</span>
+                                    <span class="fs-5 fw-bold text-success" th:text="'$' + ${#numbers.formatDecimal(employee.salary, 1, 'COMMA', 2, 'POINT')}">$0.00</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-calculator me-2"></i>Estimated Monthly</span>
+                                    <span class="fw-semibold text-dark" th:text="'$' + ${#numbers.formatDecimal(employee.salary / 12, 1, 'COMMA', 2, 'POINT')}">$0.00</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-credit-card me-2"></i>Disbursement Cycle</span>
+                                    <span class="fw-semibold text-dark">Monthly (Direct Deposit)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 4: System & Audit Metadata -->
+                <div class="col-12 col-md-6">
+                    <div class="app-card h-100">
+                        <div class="app-card-header">
+                            <h5 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                                <i class="bi bi-clock-history text-secondary"></i>
+                                <span>Record Audit Trail</span>
+                            </h5>
+                        </div>
+                        <div class="app-card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-plus-circle me-2"></i>Created Timestamp</span>
+                                    <span class="text-muted small" th:text="${employee.createdAt != null} ? ${#temporals.format(employee.createdAt, 'MMM dd, yyyy HH:mm:ss')} : 'N/A'">Timestamp</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-pencil me-2"></i>Last Updated</span>
+                                    <span class="text-muted small" th:text="${employee.updatedAt != null} ? ${#temporals.format(employee.updatedAt, 'MMM dd, yyyy HH:mm:ss')} : 'N/A'">Timestamp</span>
+                                </li>
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span class="text-secondary"><i class="bi bi-database me-2"></i>Database Storage</span>
+                                    <span class="badge bg-light text-dark border">MySQL • InnoDB</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Reusable Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title d-flex align-items-center gap-2" id="deleteConfirmModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>Confirm Employee Deletion</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="avatar-circle mx-auto mb-3 bg-danger-subtle text-danger" style="width: 64px; height: 64px; font-size: 1.75rem;">
+                    <i class="bi bi-trash-fill text-danger"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Delete <span id="deleteEmployeeName" class="text-danger" th:text="${employee.fullName}">this employee</span>?</h5>
+                <p class="text-secondary small mb-0">
+                    Are you sure you want to permanently delete this employee record? This action cannot be reversed and all historical records for this employee will be deleted from the database.
+                </p>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteEmployeeForm" method="post" th:action="@{/employees/delete/{id}(id=${employee.id})}">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-trash me-1"></i> Yes, Delete Record
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
