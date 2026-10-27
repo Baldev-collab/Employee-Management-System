@@ -1,20 +1,22 @@
-# Compiled class files
+# Compiled class files & build directories
 target/
 *.class
 
-# Embedded database directory
+# Embedded database directory (demo mode)
 data/
 
-# Log files
+# Log files & crash dumps
 *.log
 logs/
+hs_err_pid*
+replay_pid*
 
 # Secrets and environment files
 .env
 .env.local
 *.secret
 
-# IDE specific files
+# IDE & Editor specific files
 .idea/
 *.iml
 .vscode/
@@ -23,13 +25,15 @@ logs/
 .project
 .classpath
 .settings/
+*.ctxt
+.mtj.tmp/
 
 # OS specific files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Package manager lockfiles/temp
+# Package manager temporary files
 mvnw
 mvnw.cmd
 .mvn/

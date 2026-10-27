@@ -2,7 +2,7 @@
 
 A full-stack, enterprise-grade Employee Management System built from scratch using **Java 21**, **Spring Boot 3**, **Spring Data JPA / Hibernate**, **Thymeleaf**, **Bootstrap 5**, and **MySQL**.
 
-Developed for college project demonstration and evaluation, adhering to industry standard layered architecture, clean code practices, server & client validation, and automated testing.
+This system is designed to manage employees, track their departments and job positions, monitor compensation and salaries, and provide executive organizational statistics. Developed for college project demonstration and evaluation, adhering to industry standard layered architecture, clean code practices, server & client validation, and automated testing.
 
 ---
 
