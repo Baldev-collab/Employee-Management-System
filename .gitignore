@@ -1,39 +1,41 @@
-# Compiled class files & build directories
+
+# Maven build output
 target/
+
+# Java compiled files
 *.class
+*.jar
+*.war
+*.ear
 
-# Embedded database directory (demo mode)
-data/
+# Environment files and secrets
+.env
+.env.*
+!.env.example
 
-# Log files & crash dumps
+# Logs
 *.log
 logs/
-hs_err_pid*
-replay_pid*
 
-# Secrets and environment files
-.env
-.env.local
-*.secret
+# VS Code settings
+.vscode/
 
-# IDE & Editor specific files
+# IntelliJ IDEA
 .idea/
 *.iml
-.vscode/
-*.ipr
-*.iws
-.project
-.classpath
-.settings/
-*.ctxt
-.mtj.tmp/
 
-# OS specific files
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Operating system files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Package manager temporary files
-mvnw
-mvnw.cmd
-.mvn/
+# Local database files
+*.db
+*.db-shm
+*.db-wal
+*.trace.db
